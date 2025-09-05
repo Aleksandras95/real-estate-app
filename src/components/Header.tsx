@@ -1,42 +1,21 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/logo.png";
-import { useEffect, useRef, useState } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const Header = () => {
-  const [user, setUser] = useState<any>(null);
+  const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  console.log("Auth user:", user);
-  useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
+  
+  const dropdownRef = useClickOutside<HTMLDivElement>(() => {
+    setDropdownOpen(false);
+  }, dropdownOpen);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
+    await logout();
     setDropdownOpen(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   return (
     <header className="w-full sticky top-0 bg-white py-5 z-20">

@@ -5,11 +5,13 @@ import { Input } from "../components/ui/input";
 import { Link } from "react-router-dom";
 import RegisterImg from "../assets/register-img.jpg";
 import Logo from "../assets/logo.png";
+import { Eye, EyeOff } from "lucide-react";
+import type { RegisterFormData } from "../types/index";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterFormData>({
     first_name: "",
     last_name: "",
     email: "",
@@ -17,6 +19,7 @@ const RegisterPage = () => {
   });
 
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -89,19 +92,36 @@ const RegisterPage = () => {
                 <label className="text-xs text-[#0F1015] mb-1.5 capitalize">
                   {field.replace("_", " ")}
                 </label>
-                <Input
-                  name={field}
-                  type={
-                    field === "email"
-                      ? "email"
-                      : field === "password"
-                      ? "password"
-                      : "text"
-                  }
-                  value={formData[field as keyof typeof formData]}
-                  onChange={handleChange}
-                  className="h-14 p-4 rounded-[10px] outline-none !ring-0 text-base text-[#0F1015]"
-                />
+                {field === "password" ? (
+                  <div className="relative">
+                    <Input
+                      name={field}
+                      type={showPassword ? "text" : "password"}
+                      value={formData[field as keyof typeof formData]}
+                      onChange={handleChange}
+                      className="h-14 p-4 pr-12 rounded-[10px] outline-none !ring-0 text-base text-[#0F1015]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#A4A6AC] hover:text-[#0F1015]"
+                    >
+                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                    </button>
+                  </div>
+                ) : (
+                  <Input
+                    name={field}
+                    type={
+                      field === "email"
+                        ? "email"
+                        : "text"
+                    }
+                    value={formData[field as keyof typeof formData]}
+                    onChange={handleChange}
+                    className="h-14 p-4 rounded-[10px] outline-none !ring-0 text-base text-[#0F1015]"
+                  />
+                )}
               </div>
             ))}
 

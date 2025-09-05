@@ -1,24 +1,9 @@
 import { create } from "zustand";
+import type { FilterState, FilterActions } from "../types/index";
 
-type FilterState = {
-  location: string;
-  priceRange: [number, number];
-  price: string;
-  type: string;
-  bedrooms: number | null;
-  deal_type: string;
-  bathrooms: number | null;
-  setLocation: (value: string) => void;
-  setPrice: (value: string) => void;
-  setPriceRange: (range: [number, number]) => void;
-  setDealType: (value: string) => void;
-  setType: (value: string) => void;
-  setBedrooms: (value: number | null) => void;
-  setBathrooms: (value: number | null) => void;
-  resetFilters: () => void;
-};
+type FilterStore = FilterState & FilterActions;
 
-export const useFilterStore = create<FilterState>((set) => ({
+export const useFilterStore = create<FilterStore>((set) => ({
   location: "",
   price: "",
   priceRange: [0, 0],

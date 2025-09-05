@@ -1,4 +1,6 @@
 import { Route, Routes, useLocation } from "react-router-dom";
+import { AuthProvider } from "./hooks/useAuth";
+import { ROUTES, AUTH_ROUTES } from "./constants/index";
 import HomePage from "./pages/HomePage";
 import Header from "./components/Header";
 import PropertiesPage from "./pages/PropertiesPage";
@@ -10,27 +12,35 @@ import PropertyDetails from "./pages/PropertyDetails";
 import MyProperties from "./pages/MyProperties";
 import LikedProperties from "./pages/LikedProperties";
 
-const App = () => {
+const AppContent = () => {
   const location = useLocation();
-  const hideHeaderFooter =
-    location.pathname === "/login" || location.pathname === "/registration";
+  const hideHeaderFooter = AUTH_ROUTES.includes(location.pathname as typeof AUTH_ROUTES[number]);
+  
   return (
     <>
       {!hideHeaderFooter && <Header />}
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/properties" element={<PropertiesPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registration" element={<RegisterPage />} />
-          <Route path="/add-property" element={<AddProperty />} />
-          <Route path="/my-properties" element={<MyProperties />} />
-          <Route path="/property/:id" element={<PropertyDetails />} />
-          <Route path="/favorites" element={<LikedProperties />} />
+          <Route path={ROUTES.HOME} element={<HomePage />} />
+          <Route path={ROUTES.PROPERTIES} element={<PropertiesPage />} />
+          <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+          <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+          <Route path={ROUTES.ADD_PROPERTY} element={<AddProperty />} />
+          <Route path={ROUTES.MY_PROPERTIES} element={<MyProperties />} />
+          <Route path={ROUTES.PROPERTY_DETAILS} element={<PropertyDetails />} />
+          <Route path={ROUTES.FAVORITES} element={<LikedProperties />} />
         </Routes>
       </main>
       {!hideHeaderFooter && <Footer />}
     </>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 };
 

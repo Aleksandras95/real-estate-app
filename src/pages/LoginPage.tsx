@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabaseClient";
-
 import { Link } from "react-router-dom";
 import LoginImg from "../assets/login-img.jpg";
 import Logo from "../assets/logo.png";
 import { Input } from "../components/ui/input";
+import { Eye, EyeOff } from "lucide-react";
+import type { LoginFormData } from "../types/index";
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -64,13 +66,22 @@ const LoginPage = () => {
             </div>
             <div className="mb-4">
               <label className="text-xs text-[#0F1015] mb-1.5">Password</label>
-              <Input
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                className="h-14 p-4 rounded-[10px] outline-none !ring-0 text-base text-[#0F1015]"
-              />
+              <div className="relative">
+                <Input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="h-14 p-4 pr-12 rounded-[10px] outline-none !ring-0 text-base text-[#0F1015]"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#A4A6AC] hover:text-[#0F1015]"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <button
